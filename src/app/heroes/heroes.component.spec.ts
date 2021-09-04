@@ -33,5 +33,17 @@ describe('HeroesComponent', () => {
                 jasmine.objectContaining(_heroes[2]));
         })
 
+        it('ShouldDeleteTheHeroUsingTheHeroService', () => {
+            _mockHeroService.deleteHero.and.returnValue(of(true));
+            _component.heroes = _heroes;
+
+            _component.delete(_heroes[2]);
+
+            expect(_mockHeroService.deleteHero)
+                .toHaveBeenCalledTimes(1);
+            expect(_mockHeroService.deleteHero)
+                .toHaveBeenCalledWith(_heroes[2]);
+        })
+
     })
 })
