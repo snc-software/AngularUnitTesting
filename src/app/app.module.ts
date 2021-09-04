@@ -18,6 +18,7 @@ import { MessageService }       from './message.service';
 import { MessagesComponent }    from './messages/messages.component';
 import { StrengthPipe } from './strength/strength.pipe';
 import { HeroComponent } from './hero/hero.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -25,7 +26,7 @@ import { HeroComponent } from './hero/hero.component';
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
-
+    RouterModule,
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.
