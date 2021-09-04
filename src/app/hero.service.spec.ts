@@ -25,7 +25,7 @@ describe('HeroService', () => {
     })
 
     describe('getHero', () => {
-        it('should call get with the correct url', () => {
+        it('ShouldCallGetWithTheCorrectUrl', () => {
             _service.getHero(4).subscribe();
 
             const request = _httpTestingController

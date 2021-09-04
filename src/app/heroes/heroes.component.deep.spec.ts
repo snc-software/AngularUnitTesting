@@ -36,8 +36,6 @@ describe('HeroesComponent (Deep)', () => {
 
         _mockHeroService.getHeroes.and
             .returnValue(of(_heroes));
-
-
         _fixture = TestBed.createComponent(HeroesComponent);
         _component = _fixture.componentInstance;
         _fixture.detectChanges();
@@ -54,4 +52,29 @@ describe('HeroesComponent (Deep)', () => {
             .toEqual(_heroes[i]);
         }
     })
+
+    it('ShouldCallDeleteWhenTheHeroComponentsDeleteButtonIsClicked', () => {
+        spyOn(_component, 'delete'); //watch to see if it is invoked
+        const heroElements = _fixture.debugElement
+            .queryAll(By.directive(HeroComponent));
+
+        heroElements[0].query(By.css('button'))
+        .triggerEventHandler('click', 
+        {stopPropagation: () => {}});
+
+        //we got the first hero element which correlates to the first hero
+        expect(_component.delete).toHaveBeenCalledWith(_heroes[0]); 
+     })
+
+     it('ShouldCallDeleteWhenTheHeroComponentsDeleteButtonIsClickedWithoutQuery', () => {
+        spyOn(_component, 'delete'); //watch to see if it is invoked
+        const heroElements = _fixture.debugElement
+            .queryAll(By.directive(HeroComponent));
+
+        // (<HeroComponent>heroElements[0].componentInstance).delete.emit(undefined);
+        heroElements[0].triggerEventHandler('delete',null);//raise the delete event without caring about child event emitter
+
+        //we got the first hero element which correlates to the first hero
+        expect(_component.delete).toHaveBeenCalledWith(_heroes[0]); 
+     })
 })
