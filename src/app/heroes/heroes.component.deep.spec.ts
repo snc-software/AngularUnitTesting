@@ -77,4 +77,37 @@ describe('HeroesComponent (Deep)', () => {
         //we got the first hero element which correlates to the first hero
         expect(_component.delete).toHaveBeenCalledWith(_heroes[0]); 
      })
+
+     it('ShouldCallAddWhentheAddButtonIsClicked', () => {
+        spyOn(_component, 'add')
+        const heroName = "Mr Ice";
+        _mockHeroService.addHero.and.returnValue(of({id:5, name:heroName, strength:4}));
+        const inputElement = _fixture.debugElement.query(By.css('input')).nativeElement;
+        const addButton = _fixture.debugElement.queryAll(By.css('button'))[0]; //should use css accessor
+
+        //simulates typing heroName into the input box
+        inputElement.value = heroName;
+        addButton.triggerEventHandler('click', null);
+        _fixture.detectChanges();
+
+        expect(_component.add).toHaveBeenCalledOnceWith(heroName);
+        expect(_component.add).toHaveBeenCalledTimes(1);
+     })
+
+     it('ShouldAddANewHeroToTheHeroListWhenTheAddButtonIsClicked', () => {
+        //spyOn(_component, 'add')
+        const heroName = "Mr Ice";
+        _mockHeroService.addHero.and.returnValue(of({id:5, name:heroName, strength:4}));
+        const inputElement = _fixture.debugElement.query(By.css('input')).nativeElement;
+        const addButton = _fixture.debugElement.queryAll(By.css('button'))[0]; //should use css accessor
+
+        //simulates typing heroName into the input box
+        inputElement.value = heroName;
+        addButton.triggerEventHandler('click', null);
+        _fixture.detectChanges();
+
+        //expect(_component.add).toHaveBeenCalledOnceWith(heroName);
+        const heroes = _fixture.debugElement.query(By.css('ul')).nativeElement.textContent;
+        expect(heroes).toContain(heroName);
+     })
 })
