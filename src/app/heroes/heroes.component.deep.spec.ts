@@ -4,24 +4,14 @@ import { By } from "@angular/platform-browser";
 import { of } from "rxjs/internal/observable/of";
 import { Hero } from "../hero";
 import { HeroService } from "../hero.service";
+import { HeroComponent } from "../hero/hero.component";
 import { HeroesComponent } from "./heroes.component"
 
-describe('HeroesComponent (Shallow)', () => {
+describe('HeroesComponent (Deep)', () => {
     let _component : HeroesComponent;
     let _fixture: ComponentFixture<HeroesComponent>;
     let _mockHeroService;
-    let _heroes: Hero[];
-    
-
-    @Component({
-        selector: 'app-hero',
-        template: '<div></div>',
-      })
-    class TestHeroComponent {
-        @Input() hero: Hero;
-        //@Output() delete = new EventEmitter();
-      }      
-
+    let _heroes: Hero[]; 
 
     beforeEach(() => {
         _mockHeroService = jasmine.createSpyObj(
@@ -36,33 +26,32 @@ describe('HeroesComponent (Shallow)', () => {
         TestBed.configureTestingModule({
             declarations: [
                 HeroesComponent,
-                TestHeroComponent
+                HeroComponent
             ],
             providers: [
                 {provide: HeroService, useValue: _mockHeroService}
-            ]
+            ],
+            schemas: [NO_ERRORS_SCHEMA]
         });
+
+        _mockHeroService.getHeroes.and
+            .returnValue(of(_heroes));
+
 
         _fixture = TestBed.createComponent(HeroesComponent);
         _component = _fixture.componentInstance;
+        _fixture.detectChanges();
     });
 
-    it('ShouldSetHeroesFromTheService', () => {
-        _mockHeroService.getHeroes.and
-            .returnValue(of(_heroes));
-        _fixture.detectChanges();
+    it('ShouldRenderEachHeroAsAHeroComponent', () => {
+        const heroElements = _fixture.debugElement
+            .queryAll(By.directive(HeroComponent));
 
-        expect(_component.heroes).toEqual(_heroes);
-    })
+        expect(heroElements.length).toBe(_heroes.length);
 
-    it('ShouldCreateAnApp-HeroElementForEachHero', () => {
-        _mockHeroService.getHeroes.and
-            .returnValue(of(_heroes));
-        _fixture.detectChanges();
-
-        var listElements = _fixture.debugElement
-        .queryAll(By.css('app-hero'));
-
-        expect(listElements.length).toBe(_heroes.length);
+        for(let i = 0; i < _heroes.length; i++) {
+            expect(heroElements[i].componentInstance.hero)
+            .toEqual(_heroes[i]);
+        }
     })
 })
