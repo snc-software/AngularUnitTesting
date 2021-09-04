@@ -1,5 +1,5 @@
 import { Location } from "@angular/common";
-import { ComponentFixture, TestBed } from "@angular/core/testing"
+import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from "@angular/core/testing"
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { of } from "rxjs/internal/observable/of";
@@ -55,4 +55,24 @@ describe('HeroDetailComponent', () => {
         expect(h2Tag).toContain(_hero.name.toUpperCase());
     })
 
+    it('ShouldCallUpdateHeroWhenSaveIsCalled', fakeAsync(() => {
+        _mockHeroService.updateHero.and.returnValue(of({}));
+        _fixture.detectChanges();
+
+        _component.save();
+        flush();
+        
+        expect(_mockHeroService.updateHero).toHaveBeenCalled();
+    }))
+
+    // it('ShouldCallUpdateHeroWhenSaveIsCalled', waitForAsync(() => {
+    //     _mockHeroService.updateHero.and.returnValue(of({}));
+    //     _fixture.detectChanges();
+
+    //     _component.save();
+        
+    //     _fixture.whenStable().then(() => {
+    //         expect(_mockHeroService.updateHero).toHaveBeenCalled();
+    //     })  
+    // }))
 })
